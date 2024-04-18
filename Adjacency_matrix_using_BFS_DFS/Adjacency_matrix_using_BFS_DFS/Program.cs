@@ -19,6 +19,15 @@ public class Program
         reachabilityMatrix = dfs.BuildReachabilityMatrixUsingDFS();
         Console.WriteLine("\nReachability Matrix:");
         DisplayMatrix(reachabilityMatrix);
+        
+        int[][] bfsReachabilityMatrix = bfs.BuildReachabilityMatrixFromListUsingBFS(randomGraph.GetAdjacencyList());
+        Console.WriteLine("\nReachability Matrix using BFS with adjacency list:");
+        DisplayMatrix(bfsReachabilityMatrix);
+        
+        int[][] dfsReachabilityMatrix = dfs.BuildReachabilityMatrixFromListUsingDFS(randomGraph.GetAdjacencyList());
+        Console.WriteLine("\nReachability Matrix using DFS with adjacency list:");
+        DisplayMatrix(dfsReachabilityMatrix);
+        
     }
 
     private static void DisplayMatrix(int[][] matrix)
