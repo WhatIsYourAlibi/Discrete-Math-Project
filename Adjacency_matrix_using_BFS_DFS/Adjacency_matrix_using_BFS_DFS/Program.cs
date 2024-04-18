@@ -4,34 +4,11 @@ public class Program
 {
     public static void Main()
     {
-        // Create a new graph with 5 vertices
-        Graph graph = new Graph(5);
-
-        // Adding edges
-        graph.AddEdge(0, 1);
-        graph.AddEdge(0, 2);
-        graph.AddEdge(1, 2);
-        graph.AddEdge(1, 3);
-        graph.AddEdge(2, 4);
-
-        // Display the adjacency matrix
+        Graph randomGraph = GraphGenerator.GenerateRandomGraph(10, 0.5);
         Console.WriteLine("Adjacency Matrix:");
-        DisplayMatrix(graph.GetAdjacencyMatrix());
-
-        // Display the adjacency list
+        DisplayMatrix(randomGraph.GetAdjacencyMatrix());
         Console.WriteLine("\nAdjacency List:");
-        DisplayList(graph.GetAdjacencyList());
-
-        // Remove an edge
-        graph.RemoveEdge(1, 3);
-
-        // Display the adjacency matrix after removing an edge
-        Console.WriteLine("\nAdjacency Matrix after removing an edge between 1 and 3:");
-        DisplayMatrix(graph.GetAdjacencyMatrix());
-
-        // Display the adjacency list after removing an edge
-        Console.WriteLine("\nAdjacency List after removing an edge between 1 and 3:");
-        DisplayList(graph.GetAdjacencyList());
+        DisplayList(randomGraph.GetAdjacencyList());
     }
 
     private static void DisplayMatrix(int[][] matrix)

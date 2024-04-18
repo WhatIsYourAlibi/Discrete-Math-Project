@@ -15,6 +15,9 @@ public class Graph
         {
             _adjacencyMatrix[i] = new int[vertices];
         }
+        _adjacencyList = new List<int>[vertices];
+        for (int i = 0; i < vertices; ++i)
+            _adjacencyList[i] = new List<int>();
         _isMatrix = true;
     }
 
