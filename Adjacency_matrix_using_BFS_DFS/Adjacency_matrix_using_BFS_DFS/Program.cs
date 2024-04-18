@@ -1,10 +1,13 @@
-﻿namespace Adjacency_matrix_using_BFS_DFS;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Adjacency_matrix_using_BFS_DFS;
 
 public class Program
 {
     public static void Main()
     {
-        Graph randomGraph = GraphGenerator.GenerateRandomGraph(10, 0.5);
+        Graph randomGraph = GraphGenerator.GenerateRandomGraph(10, 0.2);
         Console.WriteLine("Adjacency Matrix:");
         DisplayMatrix(randomGraph.GetAdjacencyMatrix());
         Console.WriteLine("\nAdjacency List:");

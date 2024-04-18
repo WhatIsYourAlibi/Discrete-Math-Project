@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Adjacency_matrix_using_BFS_DFS;
 
 public class Graph
@@ -111,11 +113,27 @@ public class Graph
 
     public List<int> GetNeighbors(int currentVertex)
     {
+        List<int> neighbors = new List<int>();
+
+        // Check if using adjacency matrix representation
         if (_isMatrix)
         {
-            ConvertToList();
+            // Iterate through the row corresponding to the current vertex
+            for (int j = 0; j < _adjacencyMatrix[currentVertex].Length; j++)
+            {
+                // Check if there is an edge between the current vertex and vertex j
+                if (_adjacencyMatrix[currentVertex][j] == 1)
+                {
+                    neighbors.Add(j); // Add vertex j to the neighbors list
+                }
+            }
         }
-        return _adjacencyList[currentVertex];
-        
+        else
+        {
+            // If using adjacency list, return the list directly
+            return _adjacencyList[currentVertex];
+        }
+
+        return neighbors;
     }
 }
