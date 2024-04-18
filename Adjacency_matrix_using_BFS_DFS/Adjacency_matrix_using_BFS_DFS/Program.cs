@@ -9,6 +9,16 @@ public class Program
         DisplayMatrix(randomGraph.GetAdjacencyMatrix());
         Console.WriteLine("\nAdjacency List:");
         DisplayList(randomGraph.GetAdjacencyList());
+        
+        BFS bfs = new BFS(randomGraph);
+        int[][] reachabilityMatrix = bfs.BuildReachabilityMatrixUsingBFS();
+        Console.WriteLine("\nReachability Matrix:");
+        DisplayMatrix(reachabilityMatrix);
+        
+        DFS dfs = new DFS(randomGraph);
+        reachabilityMatrix = dfs.BuildReachabilityMatrixUsingDFS();
+        Console.WriteLine("\nReachability Matrix:");
+        DisplayMatrix(reachabilityMatrix);
     }
 
     private static void DisplayMatrix(int[][] matrix)

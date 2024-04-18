@@ -103,4 +103,19 @@ public class Graph
         }
         _isMatrix = false;
     }
+
+    public int GetVerticesCount()
+    {
+        return _vertices;
+    }
+
+    public List<int> GetNeighbors(int currentVertex)
+    {
+        if (_isMatrix)
+        {
+            ConvertToList();
+        }
+        return _adjacencyList[currentVertex];
+        
+    }
 }
