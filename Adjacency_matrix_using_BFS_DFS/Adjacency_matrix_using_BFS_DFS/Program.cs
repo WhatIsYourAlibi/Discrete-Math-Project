@@ -1,38 +1,81 @@
-﻿using System;
+﻿namespace Adjacency_matrix_using_BFS_DFS;
+
+using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace Adjacency_matrix_using_BFS_DFS;
-
-public class Program
+public class GraphExperiment
 {
-    public static void Main()
+    private const int Trials = 20;
+
+    public static void Main(string[] args)
     {
-        Graph randomGraph = GraphGenerator.GenerateRandomGraph(10, 0.2);
-        Console.WriteLine("Adjacency Matrix:");
-        DisplayMatrix(randomGraph.GetAdjacencyMatrix());
-        Console.WriteLine("\nAdjacency List:");
-        DisplayList(randomGraph.GetAdjacencyList());
-        
-        BFS bfs = new BFS(randomGraph);
-        int[][] reachabilityMatrix = bfs.BuildReachabilityMatrixUsingBFS();
-        Console.WriteLine("\nReachability Matrix:");
-        DisplayMatrix(reachabilityMatrix);
-        
-        DFS dfs = new DFS(randomGraph);
-        reachabilityMatrix = dfs.BuildReachabilityMatrixUsingDFS();
-        Console.WriteLine("\nReachability Matrix:");
-        DisplayMatrix(reachabilityMatrix);
-        
-        int[][] bfsReachabilityMatrix = bfs.BuildReachabilityMatrixFromListUsingBFS(randomGraph.GetAdjacencyList());
-        Console.WriteLine("\nReachability Matrix using BFS with adjacency list:");
-        DisplayMatrix(bfsReachabilityMatrix);
-        
-        int[][] dfsReachabilityMatrix = dfs.BuildReachabilityMatrixFromListUsingDFS(randomGraph.GetAdjacencyList());
-        Console.WriteLine("\nReachability Matrix using DFS with adjacency list:");
-        DisplayMatrix(dfsReachabilityMatrix);
-        
+        int[] sizes = { 20, 40, 60, 80, 100, 120, 140, 160, 180, 200 };
+        double[] densities = { 0.1, 0.25, 0.4, 0.55, 0.7 };
+
+        foreach (int size in sizes)
+        {
+            foreach (double density in densities)
+            {
+                Console.WriteLine($"Size: {size}, Density: {density:F2}");
+                
+                double averageTimeBFSMatrix = MeasureAverageTime(size, density, true, "BFS");
+                Console.WriteLine($"BFS with Matrix: {averageTimeBFSMatrix:F4} ms");
+
+                double averageTimeBFSList = MeasureAverageTime(size, density, false, "BFS");
+                Console.WriteLine($"BFS with List: {averageTimeBFSList:F4} ms");
+
+                double averageTimeDFSMatrix = MeasureAverageTime(size, density, true, "DFS");
+                Console.WriteLine($"DFS with Matrix: {averageTimeDFSMatrix:F4} ms");
+
+                double averageTimeDFSList = MeasureAverageTime(size, density, false, "DFS");
+                Console.WriteLine($"DFS with List: {averageTimeDFSList:F4} ms");
+            }
+        }
     }
 
+    private static double MeasureAverageTime(int size, double density, bool useMatrix, string method)
+    {
+        double totalTime = 0;
+
+        for (int i = 0; i < Trials; i++)
+        {
+            Graph graph = GraphGenerator.GenerateRandomGraph(size, density);
+            
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            if (method == "BFS")
+            {
+                BFS bfs = new BFS(graph);
+                if (useMatrix)
+                {
+                    int[][] reachabilityMatrix = bfs.BuildReachabilityMatrixUsingBFS();
+                }
+                else
+                {
+                    int[][] reachabilityMatrix = bfs.BuildReachabilityMatrixFromListUsingBFS(graph.GetAdjacencyList());
+                }
+            }
+            else
+            {
+                DFS dfs = new DFS(graph);
+                if (useMatrix)
+                {
+                    int[][] reachabilityMatrix = dfs.BuildReachabilityMatrixUsingDFS();
+                }
+                else
+                {
+                    int [][] reachabilityMatrix = dfs.BuildReachabilityMatrixFromListUsingDFS(graph.GetAdjacencyList());
+                }
+            }
+
+            stopwatch.Stop();
+            totalTime += stopwatch.ElapsedMilliseconds;
+        }
+
+        return totalTime / Trials;
+    }
+    
     private static void DisplayMatrix(int[][] matrix)
     {
         for (int i = 0; i < matrix.Length; i++)
@@ -54,6 +97,7 @@ public class Program
             {
                 Console.Write(item + " ");
             }
+
             Console.WriteLine();
         }
     }
