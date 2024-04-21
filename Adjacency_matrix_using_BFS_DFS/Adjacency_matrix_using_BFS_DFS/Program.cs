@@ -8,7 +8,7 @@ using System.IO;
 public class GraphExperiment
 {
     private const int Trials = 100;
-    private static string resultFilePath = @"C:\Users\38097\Documents\GitHub\Discrete-Math-Project\Adjacency_matrix_using_BFS_DFS\Adjacency_matrix_using_BFS_DFS\experiment_results100.tsv";
+    private static string resultFilePath = @"C:\Users\38097\Documents\GitHub\Discrete-Math-Project\Adjacency_matrix_using_BFS_DFS\Adjacency_matrix_using_BFS_DFS\experiment_results.tsv";
 
     public static void Main(string[] args)
     {
