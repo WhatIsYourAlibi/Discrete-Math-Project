@@ -3,35 +3,44 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.IO;
 
 public class GraphExperiment
 {
-    private const int Trials = 20;
+    private const int Trials = 100;
+    private static string resultFilePath = @"C:\Users\38097\Documents\GitHub\Discrete-Math-Project\Adjacency_matrix_using_BFS_DFS\Adjacency_matrix_using_BFS_DFS\experiment_results100.tsv";
 
     public static void Main(string[] args)
     {
+        Console.WriteLine("Experiment started. Please wait...");
+
         int[] sizes = { 20, 40, 60, 80, 100, 120, 140, 160, 180, 200 };
         double[] densities = { 0.1, 0.25, 0.4, 0.55, 0.7 };
 
-        foreach (int size in sizes)
+        // Prepare the file to store the results
+        using (StreamWriter writer = new StreamWriter(resultFilePath))
         {
-            foreach (double density in densities)
+            writer.WriteLine("Size\tDensity\tRepresentation\tMethod\tAverageTime(ms)");
+            foreach (int size in sizes)
             {
-                Console.WriteLine($"Size: {size}, Density: {density:F2}");
-                
-                double averageTimeBFSMatrix = MeasureAverageTime(size, density, true, "BFS");
-                Console.WriteLine($"BFS with Matrix: {averageTimeBFSMatrix:F4} ms");
-
-                double averageTimeBFSList = MeasureAverageTime(size, density, false, "BFS");
-                Console.WriteLine($"BFS with List: {averageTimeBFSList:F4} ms");
-
-                double averageTimeDFSMatrix = MeasureAverageTime(size, density, true, "DFS");
-                Console.WriteLine($"DFS with Matrix: {averageTimeDFSMatrix:F4} ms");
-
-                double averageTimeDFSList = MeasureAverageTime(size, density, false, "DFS");
-                Console.WriteLine($"DFS with List: {averageTimeDFSList:F4} ms");
+                foreach (double density in densities)
+                {
+                    // Perform BFS and DFS with both representations and write to file
+                    PerformExperiment(size, density, true, "BFS", writer);
+                    PerformExperiment(size, density, false, "BFS", writer);
+                    PerformExperiment(size, density, true, "DFS", writer);
+                    PerformExperiment(size, density, false, "DFS", writer);
+                }
             }
         }
+        
+        Console.WriteLine($"Experiment finished. Results written to {resultFilePath}");
+    }
+
+    private static void PerformExperiment(int size, double density, bool useMatrix, string method, StreamWriter writer)
+    {
+        double averageTime = MeasureAverageTime(size, density, useMatrix, method);
+        writer.WriteLine($"{size}\t{density:F2}\t{(useMatrix ? "Matrix" : "List")}\t{method}\t{averageTime:F4}");
     }
 
     private static double MeasureAverageTime(int size, double density, bool useMatrix, string method)
@@ -47,26 +56,16 @@ public class GraphExperiment
             if (method == "BFS")
             {
                 BFS bfs = new BFS(graph);
-                if (useMatrix)
-                {
-                    int[][] reachabilityMatrix = bfs.BuildReachabilityMatrixUsingBFS();
-                }
-                else
-                {
-                    int[][] reachabilityMatrix = bfs.BuildReachabilityMatrixFromListUsingBFS(graph.GetAdjacencyList());
-                }
+                int[][] reachabilityMatrix = useMatrix ?
+                    bfs.BuildReachabilityMatrixUsingBFS() :
+                    bfs.BuildReachabilityMatrixFromListUsingBFS(graph.GetAdjacencyList());
             }
             else
             {
                 DFS dfs = new DFS(graph);
-                if (useMatrix)
-                {
-                    int[][] reachabilityMatrix = dfs.BuildReachabilityMatrixUsingDFS();
-                }
-                else
-                {
-                    int [][] reachabilityMatrix = dfs.BuildReachabilityMatrixFromListUsingDFS(graph.GetAdjacencyList());
-                }
+                int[][] reachabilityMatrix = useMatrix ?
+                    dfs.BuildReachabilityMatrixUsingDFS() :
+                    dfs.BuildReachabilityMatrixFromListUsingDFS(graph.GetAdjacencyList());
             }
 
             stopwatch.Stop();
@@ -74,31 +73,5 @@ public class GraphExperiment
         }
 
         return totalTime / Trials;
-    }
-    
-    private static void DisplayMatrix(int[][] matrix)
-    {
-        for (int i = 0; i < matrix.Length; i++)
-        {
-            for (int j = 0; j < matrix[i].Length; j++)
-            {
-                Console.Write(matrix[i][j] + " ");
-            }
-            Console.WriteLine();
-        }
-    }
-
-    private static void DisplayList(List<int>[] list)
-    {
-        for (int i = 0; i < list.Length; i++)
-        {
-            Console.Write(i + ": ");
-            foreach (var item in list[i])
-            {
-                Console.Write(item + " ");
-            }
-
-            Console.WriteLine();
-        }
     }
 }
